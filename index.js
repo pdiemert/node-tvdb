@@ -6,7 +6,6 @@
  * Copyright (c) 2014 Edward Wellbrook <edwellbrook@gmail.com>
  * MIT Licensed
  */
-
 var request		= require("superagent").get,
     parseString	= require("xml2js").parseString;
 	
@@ -14,7 +13,7 @@ var Client = function(accessToken, language) {
 	if (!accessToken) {
 		throw new Error("Access token must be set.");
 	}
-	
+
 	this._token = accessToken;
 	this._language = language || "en";
 	this._baseURL = "http://www.thetvdb.com/api/";
@@ -54,6 +53,13 @@ Client.prototype.getTime = function(callback) {
 /**
  * Series
  */
+
+Client.prototype.getSeriesByRemoteID = function(imdbid, callback) {
+	var path = "GetSeriesByRemoteID.php?imdbid=" + imdbid + "&language=" + this._language;
+	this.sendRequest(path, function(error, response) {
+		callback(error, (response && response.Data) ? response.Data.Series : null);
+	});
+}
 
 Client.prototype.getSeries = function(name, callback) {
 	var path = "GetSeries.php?seriesname=" + name + "&language=" + this._language;
